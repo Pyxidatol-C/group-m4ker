@@ -1,0 +1,10 @@
+.tbl-app_bar {
+  position: relative;
+  background: cadetblue;
+  color: white;
+}
+
+.tbl-title {
+  flex: 1;
+  margin-left: 25px;
+}
