@@ -57,3 +57,14 @@
   margin-top: 25%;
   font-family: Roboto, serif;
 }
+
+.gp-toolbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: opacity 230ms;
+}

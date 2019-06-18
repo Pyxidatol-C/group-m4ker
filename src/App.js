@@ -24,21 +24,31 @@ class App extends React.Component {
 
     this.state = {
       nbGroups: 10,
-      groups: [],
+      groups: [], // [[54,19,57,18,28,23],[55,25,32,35,3,51],[36,11,26,31,48,46],[45,53,17,14,56,43],[58,8,10,0,13,6],[39,27,40,29,21,33],[37,49,16,38,9,12],[34,52,15,5,50,47],[24,7,20,30,22,2],[41,42,4,1,44]],
       fileName: "IB Students",
       students: [],
       stage: STAGE.newPromo,
     };
 
     this.refUploaderCSV = React.createRef();
+    this.handleHomeOpen = this.handleHomeOpen.bind(this);
     this.handleChooseCSV = this.handleChooseCSV.bind(this);
     this.handleUploadCSV = this.handleUploadCSV.bind(this);
+    this.handleOpOpen = this.handleOpOpen.bind(this);
     this.handlePromoOpen = this.handlePromoOpen.bind(this);
     this.handlePromoClose = this.handlePromoClose.bind(this);
     this.handlePromoSave = this.handlePromoSave.bind(this);
     this.handleGenerateGroups = this.handleGenerateGroups.bind(this);
     this.handleUploadGroups = this.handleUploadGroups.bind(this);
-    this.handleShowGroups = this.handleShowGroups.bind(this);
+    this.handleGroupsOpen = this.handleGroupsOpen.bind(this);
+    this.handleGroupsChange = this.handleGroupsChange.bind(this);
+  }
+
+  handleHomeOpen() {
+    this.refUploaderCSV.current.value = "";
+    this.setState({
+      stage: STAGE.newPromo
+    });
   }
 
   handleChooseCSV() {
@@ -68,10 +78,16 @@ class App extends React.Component {
     this.setState({stage: STAGE.promo});
   }
 
+  handleOpOpen() {
+    this.setState({stage: STAGE.newGroups});
+  }
+
   handlePromoClose() {
-    this.setState({
-      stage: STAGE.newGroups,
-    });
+    if (this.state.groups.length === 0) {
+      this.handleOpOpen();
+    } else {
+      this.handleGroupsOpen();
+    }
   }
 
   handlePromoSave(students) {
@@ -94,7 +110,7 @@ class App extends React.Component {
 
         this.setState({
           groups: [],
-        }, this.handleShowGroups);
+        }, this.handleGroupsOpen);
       };
       reader.readAsText(file);
     } catch (e) {
@@ -102,8 +118,12 @@ class App extends React.Component {
     }
   }
 
-  handleShowGroups() {
+  handleGroupsOpen() {
     this.setState({stage: STAGE.groups});
+  }
+
+  handleGroupsChange(groups) {
+    this.setState({groups});
   }
 
 // TODO group_add
@@ -125,7 +145,7 @@ class App extends React.Component {
                      students={this.state.students}
                      fileName={this.state.fileName}
                      isOpen={this.state.stage === STAGE.promo}
-                     handleClose={this.handlePromoClose}
+                     handleClose={this.handleHomeOpen}
                      handleSave={this.handlePromoSave}/>
           <NewGroupsPage key={'op' + this.state.stage}
                          handleGenerateGroups={this.handleGenerateGroups}

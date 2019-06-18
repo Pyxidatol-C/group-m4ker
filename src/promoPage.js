@@ -65,7 +65,7 @@ class PromoPage extends React.Component {
         </Typography>
         <Button color="inherit"
                 onClick={() => this.props.handleSave(decodeData(this.tableRef.current.state.data))}>
-          Save
+          Next
         </Button>
       </Toolbar>
       <StudentsTable

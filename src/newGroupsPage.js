@@ -1,8 +1,10 @@
 import React from 'react';
 import './newGroupsPage.css';
-import {Dialog,} from "@material-ui/core";
+import {Dialog, Fab} from "@material-ui/core";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import OpenInBroswerIcon from "@material-ui/icons/OpenInBrowser";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 
 
 class NewGroupsPage extends React.Component {
@@ -11,18 +13,22 @@ class NewGroupsPage extends React.Component {
     this.state = {
       focus: '',
       clicked: '',
-      nbGroups: 10,
+      nbGroups: props.nbGroups,
     };
+
     this.refUploaderText = React.createRef();
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.handleClickLeft = this.handleClickLeft.bind(this);
+    this.handleClickRight = this.handleClickRight.bind(this);
   }
 
-  handleFocus(focus) {
+  handleMouseEnter(focus) {
     this.setState({
       focus,
     });
   }
 
-  handleBlur() {
+  handleMouseLeave() {
     this.setState({
       focus: '',
     });
@@ -41,6 +47,36 @@ class NewGroupsPage extends React.Component {
     return className;
   }
 
+  handleClickLeft() {
+    this.setState(
+        {clicked: 'left'},
+        () => this.refUploaderText.current.click()
+    );
+  }
+
+  handleClickRight() {
+    this.setState(
+        {clicked: 'right'},
+        () => this.props.handleGenerateGroups(this.state.nbGroups)
+    );
+  }
+
+  canIncrementNb() {
+    return this.state.nbGroups + 1 <= this.props.maxNbGroups;
+  }
+
+  canDecrementNb() {
+    return this.state.nbGroups - 1 > 0;
+  }
+
+  incrementNb() {
+    this.setState({nbGroups: this.state.nbGroups + 1});
+  }
+
+  decrementNb() {
+    this.setState({nbGroups: this.state.nbGroups - 1});
+  }
+
   render() {
     return <Dialog fullScreen
                    open={this.props.isOpen}>
@@ -53,29 +89,37 @@ class NewGroupsPage extends React.Component {
       <div id="gp-container">
         <OptionPanel id_="gp-upload"
                      className_={"gp-action " + this.getClassName('left')}
-                     handleFocus={() => this.handleFocus('left')}
-                     handleClick={() => {
-                       this.setState(
-                           {clicked: 'left'},
-                           () => this.refUploaderText.current.click()
-                       );
-                     }}
-                     handleBlur={this.handleBlur.bind(this)}>
-          <OpenInBroswerIcon className="svg_icon"/>
-          <h1 className="gp-desc">Upload Groups</h1>
+                     handleFocus={() => this.handleMouseEnter('left')}
+                     handleBlur={this.handleMouseLeave.bind(this)}>
+          <OpenInBroswerIcon className="svg_icon clickable"
+                             onMouseEnter={() => this.handleMouseEnter('left')}
+                             onMouseLeave={this.handleMouseLeave}
+                             onClick={this.handleClickLeft}/>
+          <h1 className="gp-desc">
+            Upload Groups
+          </h1>
         </OptionPanel>
         <OptionPanel id_="gp-generate"
-                     className_={"gp-action " + this.getClassName('right')}
-                     handleFocus={() => this.handleFocus('right')}
-                     handleClick={() => {
-                       this.setState(
-                           {clicked: 'right'},
-                           () => this.props.handleGenerateGroups(this.state.nbGroups)
-                       );
-                     }}
-                     handleBlur={this.handleBlur.bind(this)}>
-          <GroupAddIcon className="svg_icon"/>
-          <h1 className="gp-desc">Generate Groups</h1>
+                     className_={"gp-action " + this.getClassName('right')}>
+          <GroupAddIcon className="svg_icon clickable"
+                        onMouseEnter={() => this.handleMouseEnter('right')}
+                        onMouseLeave={this.handleMouseLeave}
+                        onClick={this.handleClickRight}/>
+          <h1 className="gp-desc ">
+            Generate {this.state.nbGroups} Groups
+          </h1>
+          <div className={"gp-toolbar"}>
+            <Fab color="primary"
+                 disabled={!this.canIncrementNb()}
+                 onClick={() => this.incrementNb()}>
+              <AddIcon/>
+            </Fab>
+            <Fab color="secondary"
+                 disabled={!this.canDecrementNb()}
+                 onClick={() => this.decrementNb()}>
+              <RemoveIcon/>
+            </Fab>
+          </div>
         </OptionPanel>
       </div>
     </Dialog>
@@ -86,10 +130,7 @@ class NewGroupsPage extends React.Component {
 class OptionPanel extends React.Component {
   render() {
     return <div id={this.props.id_}
-                className={this.props.className_}
-                onMouseEnter={this.props.handleFocus}
-                onClick={this.props.handleClick}
-                onBlur={this.props.handleBlur}>
+                className={this.props.className_}>
       <div className="gp-table">
         <div className="gp-child">
           {this.props.children}
