@@ -4,6 +4,7 @@ import './App.css';
 import csv2promo from "./loadCSV";
 import HomePage from "./homePage";
 import PromoPage from "./promoPage";
+import makeGroups from './students';
 import NewGroupsPage from "./newGroupsPage";
 
 // TODO snackbar
@@ -22,11 +23,11 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      nbGroups: 10,
       groups: [],
       fileName: "IB Students",
       students: [],
-      // new promo -> promo -> new groups -> groups
-      stage: STAGE.newGroups,
+      stage: STAGE.newPromo,
     };
 
     this.refUploaderCSV = React.createRef();
@@ -51,6 +52,7 @@ class App extends React.Component {
       reader.onload = (evt) => {
         let content = evt.target.result;
         let students = csv2promo(content);
+        console.log(makeGroups(students, 10));
         this.setState({
           students,
           fileName: file.name.split('.').slice(0, -1).join('.')
@@ -78,7 +80,9 @@ class App extends React.Component {
   }
 
   handleGenerateGroups() {
-
+    this.setState({
+      groups: makeGroups(this.state.students, this.state.nbSL)
+    }, this.handleShowGroups);
   }
 
   handleUploadGroups(e) {
