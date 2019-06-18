@@ -109,6 +109,7 @@ function makeGroups(promo, nbGroups) {
               score = score0;
               swap = {a, b, x, y};
             }
+            [groups[a][x], groups[b][y]] = [groups[b][y], groups[a][x]];
           }
         }
       }

@@ -11,6 +11,7 @@ class NewGroupsPage extends React.Component {
     this.state = {
       focus: '',
       clicked: '',
+      nbGroups: 10,
     };
     this.refUploaderText = React.createRef();
   }
@@ -30,7 +31,7 @@ class NewGroupsPage extends React.Component {
   getClassName(part) {
     let className;
     if (this.state.focus === '') {
-      className =  "";
+      className = "";
     } else {
       className = part === this.state.focus ? "gp-focus" : "gp-blur";
     }
@@ -54,8 +55,10 @@ class NewGroupsPage extends React.Component {
                      className_={"gp-action " + this.getClassName('left')}
                      handleFocus={() => this.handleFocus('left')}
                      handleClick={() => {
-                       this.setState({clicked: 'left'});
-                       this.refUploaderText.current.click();
+                       this.setState(
+                           {clicked: 'left'},
+                           () => this.refUploaderText.current.click()
+                       );
                      }}
                      handleBlur={this.handleBlur.bind(this)}>
           <OpenInBroswerIcon className="svg_icon"/>
@@ -65,8 +68,10 @@ class NewGroupsPage extends React.Component {
                      className_={"gp-action " + this.getClassName('right')}
                      handleFocus={() => this.handleFocus('right')}
                      handleClick={() => {
-                       this.setState({clicked: 'right'});
-
+                       this.setState(
+                           {clicked: 'right'},
+                           () => this.props.handleGenerateGroups(this.state.nbGroups)
+                       );
                      }}
                      handleBlur={this.handleBlur.bind(this)}>
           <GroupAddIcon className="svg_icon"/>

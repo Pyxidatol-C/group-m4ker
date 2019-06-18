@@ -2,9 +2,9 @@ import React from 'react';
 import './loadCSV';
 import './App.css';
 import csv2promo from "./loadCSV";
+import makeGroups from './students';
 import HomePage from "./homePage";
 import PromoPage from "./promoPage";
-import makeGroups from './students';
 import NewGroupsPage from "./newGroupsPage";
 
 // TODO snackbar
