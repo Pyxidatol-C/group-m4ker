@@ -1,13 +1,15 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import {
+  Button,
+  Dialog,
+  IconButton,
+  Slide,
+  Toolbar,
+  Typography
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from "@material-ui/core/IconButton";
 import MaterialTable from 'material-table';
-import Slide from '@material-ui/core/Slide';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import './studentsTable.css';
+import './promoPage.css';
 
 function encodeData(data) {
   return data.map(s => {
@@ -39,7 +41,7 @@ function decodeData(data) {
   });
 }
 
-class StudentsTableDialog extends React.Component {
+class PromoPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -51,18 +53,18 @@ class StudentsTableDialog extends React.Component {
       return <Slide direction="up" ref={ref} {...props} />;
     });
     return <Dialog fullScreen
-                   open={this.props.tableOpen}
-                   onClose={this.props.handleTableClose}
+                   open={this.props.isOpen}
+                   onClose={this.props.handleClose}
                    TransitionComponent={Transition}>
       <Toolbar className={'tbl-app_bar'}>
-        <IconButton edge="start" color="inherit" onClick={this.props.handleTableClose} href="#" aria-label="Close">
+        <IconButton edge="start" color="inherit" onClick={this.props.handleClose} aria-label="Close">
           <CloseIcon/>
         </IconButton>
         <Typography variant="h5" className="tbl-title">
           List of Students
         </Typography>
         <Button color="inherit"
-                onClick={() => this.props.handleTableSave(decodeData(this.tableRef.current.state.data))}>
+                onClick={() => this.props.handleSave(decodeData(this.tableRef.current.state.data))}>
           Save
         </Button>
       </Toolbar>
@@ -99,6 +101,7 @@ class StudentsTable extends React.Component {
         columns={this.state.columns}
         data={this.state.data}
         options={{
+          addRowPosition: "first",
           exportButton: true,
           filtering: true,
           pageSize: this.state.data.length,
@@ -144,4 +147,4 @@ class StudentsTable extends React.Component {
   }
 }
 
-export default StudentsTableDialog;
+export default PromoPage;
