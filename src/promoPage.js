@@ -104,7 +104,7 @@ class StudentsTable extends React.Component {
           addRowPosition: "first",
           exportButton: true,
           filtering: true,
-          pageSize: this.state.data.length,
+          pageSize: 10,
         }}
         editable={{
           onRowAdd: newData =>
