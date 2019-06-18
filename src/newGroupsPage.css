@@ -1,0 +1,59 @@
+#gp-container {
+  height: 100%;
+  width: 100%;
+}
+
+.gp-action {
+  height: 100%;
+  width: 50%;
+  display: inline-block;
+  transition: width 320ms ease-out, background 500ms, color 500ms;
+}
+
+#gp-upload {
+  left: 0;
+  background: #ff6f69;
+  color: white;
+}
+
+#gp-upload.active{
+  background: #ed5b46;
+}
+
+#gp-generate {
+  right: 0;
+  background: #ffffff;
+}
+
+#gp-generate.active {
+  color: #283655;
+}
+
+.gp-focus {
+  width: 55%;
+}
+
+.gp-blur {
+  width: 45%;
+}
+
+.gp-table {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+.gp-child {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.svg_icon {
+  transform: scale(10.0);
+}
+
+.gp-desc {
+  margin-top: 12.5%;
+  font-family: Roboto, serif;
+}

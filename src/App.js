@@ -4,6 +4,7 @@ import './App.css';
 import csv2promo from "./loadCSV";
 import HomePage from "./homePage";
 import PromoPage from "./promoPage";
+import NewGroupsPage from "./newGroupsPage";
 
 // TODO snackbar
 // TODO avatar
@@ -25,7 +26,7 @@ class App extends React.Component {
       fileName: "IB Students",
       students: [],
       // new promo -> promo -> new groups -> groups
-      stage: STAGE.newPromo,
+      stage: STAGE.newGroups,
     };
 
     this.refUploaderCSV = React.createRef();
@@ -34,6 +35,9 @@ class App extends React.Component {
     this.handlePromoOpen = this.handlePromoOpen.bind(this);
     this.handlePromoClose = this.handlePromoClose.bind(this);
     this.handlePromoSave = this.handlePromoSave.bind(this);
+    this.handleGenerateGroups = this.handleGenerateGroups.bind(this);
+    this.handleUploadGroups = this.handleUploadGroups.bind(this);
+    this.handleShowGroups = this.handleShowGroups.bind(this);
   }
 
   handleChooseCSV() {
@@ -73,6 +77,31 @@ class App extends React.Component {
     this.handlePromoClose();
   }
 
+  handleGenerateGroups() {
+
+  }
+
+  handleUploadGroups(e) {
+    try {
+      let file = e.target.files[0];
+      let reader = new FileReader();
+      reader.onload = (evt) => {
+        let content = evt.target.result;
+
+        this.setState({
+          groups: [],
+        }, this.handleShowGroups);
+      };
+      reader.readAsText(file);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  handleShowGroups() {
+    this.setState({stage: STAGE.groups});
+  }
+
 // TODO group_add
   render() {
     return (
@@ -83,16 +112,21 @@ class App extends React.Component {
                  ref={this.refUploaderCSV}
                  accept="text/csv"
                  onChange={this.handleUploadCSV}
-                 className='hidden'/>
+                 hidden/>
 
-          <HomePage isOpen={this.state.stage === STAGE.newPromo}
+          <HomePage key={'home' + this.state.stage}
+                    isOpen={this.state.stage === STAGE.newPromo}
                     onClick={this.handleChooseCSV}/>
-          <PromoPage key={this.state.stage}
+          <PromoPage key={'promo' + this.state.stage}
                      students={this.state.students}
                      fileName={this.state.fileName}
                      isOpen={this.state.stage === STAGE.promo}
                      handleClose={this.handlePromoClose}
                      handleSave={this.handlePromoSave}/>
+          <NewGroupsPage key={'op' + this.state.stage}
+                         handleGenerateGroups={this.handleGenerateGroups}
+                         handleUploadGroups={this.handleUploadGroups}
+                         isOpen={this.state.stage === STAGE.newGroups}/>
         </div>
     );
   }
