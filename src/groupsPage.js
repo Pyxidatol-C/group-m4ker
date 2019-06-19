@@ -32,13 +32,12 @@ function isPosEq(x, y) {
   return x.i === y.i && x.j === y.j;
 }
 
-function isHighlighted(x, ys) {
-  for (const y of ys) {
-    if (isPosEq(x, y)) {
-      return true;
-    }
-  }
-  return false;
+function hasSameProfile(s1, s2) {
+  return s1.gender === s2.gender
+      && s1.leader === s2.leader
+      && s1.bio === s2.bio
+      && s1.chm === s2.chm
+      && s1.phy === s2.phy;
 }
 
 
@@ -50,9 +49,9 @@ class GroupsPage extends React.Component {
       lastSavedGroups: this.props.groups,
       history: [],
       i: -1,
-      selected1: {i: 0, j: 1},
+      selected1: null,
       selected2: null,
-      highlighted: [{i: 0, j: 0}],
+      highlighted: [],
       isSaveWarningOpen: false,
     };
 
@@ -100,8 +99,50 @@ class GroupsPage extends React.Component {
     this.refDownload.current.click();
   }
 
-  handleStudentClick(i, j) {
+  findIdsOfSameProfile(id) {
+    const s1 = this.props.promo[id];
+    const ids = [];
+    for (const [i, s2] of this.props.promo.entries()) {
+      if (i !== id) {
+        if (hasSameProfile(s1, s2)) {
+          ids.push(i);
+        }
+      }
+    }
+    return ids;
+  }
 
+  handleStudentClick(i, j) {
+    const x = {i, j};
+    const id = this.state.groups.groups[i][j];
+    let selected1, selected2;
+    if (this.state.selected1 === null) {
+      selected1 = x;
+      selected2 = null;
+    } else if (isPosEq(x, this.state.selected1)) {
+      selected1 = null;
+      selected2 = null;
+    } else {
+      if (this.state.highlighted.includes(id)) {
+        selected1 = this.state.selected1;
+        selected2 = x;
+      } else {
+        selected1 = x;
+        selected2 = null;
+      }
+    }
+    let highlighted;
+    if (selected1 !== null && selected2 === null) {
+      highlighted = this.findIdsOfSameProfile(this.state.groups.groups[selected1.i][selected1.j]);
+    } else {
+      highlighted = [];
+    }
+
+    this.setState({
+      selected1,
+      selected2,
+      highlighted,
+    })
   }
 
   canSwap() {
@@ -232,9 +273,8 @@ class GroupBox extends React.Component {
     return isPosEq(x, this.props.selected1) || isPosEq(x, this.props.selected2);
   }
 
-  isHighlighted(j) {
-    const x = {i: this.props.groupNb, j};
-    return isHighlighted(x, this.props.highlighted);
+  isHighlighted(id) {
+    return this.props.highlighted.includes(id);
   }
 
   getPersonBox(id, j) {
@@ -242,11 +282,11 @@ class GroupBox extends React.Component {
     return (
         <ListItem
             button
-            className={this.isHighlighted(j) ? "gps-highlighted" : ""}
+            className={this.isHighlighted(id) ? "gps-highlighted" : ""}
             selected={this.isSelected(j)}
             key={id + "/" + j}
             divider={j !== this.props.groupIds.length - 1}
-            onClick={() => console.log('click')}
+            onClick={() => this.props.handleClick(this.props.groupNb, j)}
         >
           <ListItemText primary={name}/>
         </ListItem>
