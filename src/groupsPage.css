@@ -1,8 +1,8 @@
 .gps-toolbar {
   position: relative;
   justify-content: space-between;
-  background: royalblue;
-  color: white;
+  background: #f9f8eb;
+  color: #313131;
 }
 
 .gps-title {
@@ -13,7 +13,25 @@
   padding-right: 5%;
 }
 
-.gps-fab {
-  position: absolute;
-  display: inline-block;
+.gps-fab-container {
+  position: fixed;
+  bottom: 3%;
+  right: 2%;
+  margin: 0 auto;
+}
+
+.gps-container {
+  display: flex;
+  flex-wrap: wrap;
+  background: #5c8d89;
+  justify-content: center;
+}
+
+.gps-box {
+  margin: 10px;
+  width: 19%;
+}
+
+.gps-box-title {
+  text-align: center;
 }
