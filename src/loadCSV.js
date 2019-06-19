@@ -11,7 +11,6 @@ async function csv2promo(c) {
 
   for (const i of headers) {
     const header = i.replace(/ /g, "").toUpperCase();
-    console.log(header);
     if (header.includes("NAME") || header.includes("STUDENT")) {
       iName = iName || i;
     } else if (header.includes("GENDER") || header.includes("M/F")) {
@@ -28,7 +27,6 @@ async function csv2promo(c) {
   }
 
   for (const info of rows) {
-    console.log(info[iLeader]);
 
     promo.push({
       name: info[iName],

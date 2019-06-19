@@ -109,7 +109,7 @@ class App extends React.Component {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onload = (evt) => {
-        const groups= decodeURIComponent(evt.target.result);
+        const groups= JSON.parse(decodeURIComponent(evt.target.result));
 
         this.setState({
           groups,
