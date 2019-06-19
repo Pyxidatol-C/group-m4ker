@@ -35,3 +35,20 @@
 .gps-box-title {
   text-align: center;
 }
+
+.gps-selected {
+  background: #525252;
+}
+
+.gps-highlighted {
+  animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 10px -10px #add2c9;
+  }
+  to {
+    box-shadow: 0 0 10px 10px #add2c9;
+  }
+}

@@ -50,9 +50,9 @@ class GroupsPage extends React.Component {
       lastSavedGroups: this.props.groups,
       history: [],
       i: -1,
-      selected1: null,
+      selected1: {i: 0, j: 1},
       selected2: null,
-      highlighted: [],
+      highlighted: [{i: 0, j: 0}],
       isSaveWarningOpen: false,
     };
 
@@ -227,26 +227,24 @@ class GroupsPage extends React.Component {
 
 
 class GroupBox extends React.Component {
-  getClassNames(j) {
-    let classNames = [];
-    const x = {i: this.props.i, j};
-    if (isPosEq(x, this.props.selected1) || isPosEq(x, this.props.selected2)) {
-      classNames.push("gps-selected");
-    }
-    if (isHighlighted(x, this.props.highlighted)) {
-      classNames.push("gps-highlighted");
-    }
-    return classNames.join(' ');
+  isSelected(j) {
+    const x = {i: this.props.groupNb, j};
+    return isPosEq(x, this.props.selected1) || isPosEq(x, this.props.selected2);
+  }
+
+  isHighlighted(j) {
+    const x = {i: this.props.groupNb, j};
+    return isHighlighted(x, this.props.highlighted);
   }
 
   getPersonBox(id, j) {
     const name = this.props.promo[id].name;
-    const classNames = this.getClassNames(j);
     return (
         <ListItem
             button
-            key={id + classNames + j}
-            className={classNames}
+            className={this.isHighlighted(j) ? "gps-highlighted" : ""}
+            selected={this.isSelected(j)}
+            key={id + "/" + j}
             divider={j !== this.props.groupIds.length - 1}
             onClick={() => console.log('click')}
         >
