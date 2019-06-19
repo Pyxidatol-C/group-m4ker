@@ -45,10 +45,9 @@ class GroupsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      groups: this.props.groups,
       lastSavedGroups: this.props.groups,
-      history: [],
-      i: -1,
+      history: [this.props.groups],
+      i: 0,
       selected1: null,
       selected2: null,
       highlighted: [],
@@ -66,6 +65,10 @@ class GroupsPage extends React.Component {
     );
   }
 
+  groups() {
+    return this.state.history[this.state.i];
+  }
+
   clearGroups() {
     // No need to actually clear this.state.groups
     this.props.handleGroupsChange({groups: [], key: ''});
@@ -73,9 +76,9 @@ class GroupsPage extends React.Component {
   }
 
   saveGroups(shouldShowWarning = true) {
-    this.props.handleGroupsChange(this.state.groups);
+    this.props.handleGroupsChange(this.groups());
     this.setState({
-      lastSavedGroups: this.state.groups,
+      lastSavedGroups: this.groups(),
     });
     if (shouldShowWarning) {
       this.showSaveWarning();
@@ -114,7 +117,7 @@ class GroupsPage extends React.Component {
 
   handleStudentClick(i, j) {
     const x = {i, j};
-    const id = this.state.groups.groups[i][j];
+    const id = this.groups().groups[i][j];
     let selected1, selected2;
     if (this.state.selected1 === null) {
       selected1 = x;
@@ -133,7 +136,7 @@ class GroupsPage extends React.Component {
     }
     let highlighted;
     if (selected1 !== null && selected2 === null) {
-      highlighted = this.findIdsOfSameProfile(this.state.groups.groups[selected1.i][selected1.j]);
+      highlighted = this.findIdsOfSameProfile(this.groups().groups[selected1.i][selected1.j]);
     } else {
       highlighted = [];
     }
@@ -149,8 +152,40 @@ class GroupsPage extends React.Component {
     return this.state.selected1 !== null && this.state.selected2 !== null;
   }
 
-  handleSwap() {
+  canUndo() {
+    return this.state.i - 1 >= 0;
+  }
 
+  canRedo() {
+    return this.state.i + 1 <= this.state.history.length - 1;
+  }
+
+  handleUndo() {
+    this.setState({
+      i: this.state.i - 1
+    });
+  }
+
+  handleRedo() {
+    this.setState({
+      i: this.state.i + 1
+    });
+  }
+
+  handleSwap() {
+    const groups = JSON.parse(JSON.stringify(this.groups().groups));
+    const a = this.state.selected1;
+    const b = this.state.selected2;
+    [groups[a.i][a.j], groups[b.i][b.j]] = [groups[b.i][b.j], groups[a.i][a.j]];  // hehe bj aaa
+    const i = this.state.i + 1;
+    const history = [...this.state.history.slice(0, i), {key: this.groups().key, groups}];
+    this.setState({
+      i,
+      history,
+      selected1: null,
+      selected2: null,
+      highlighted: [],
+    })
   }
 
   render() {
@@ -159,10 +194,10 @@ class GroupsPage extends React.Component {
       <a
           hidden
           ref={this.refDownload}
-          href={`data: text/plain; charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.groups))}`}
+          href={`data: text/plain; charset=utf-8,${encodeURIComponent(JSON.stringify(this.groups()))}`}
           download={`${this.props.promoName}_groups.txt`}
       >
-        {JSON.stringify(this.state.groups)}
+        {JSON.stringify(this.groups())}
       </a>
       <AppBar position="sticky">
         <Toolbar className="gps-toolbar">
@@ -184,14 +219,20 @@ class GroupsPage extends React.Component {
           </Typography>
 
           <IconButton color="inherit"
-                      disabled={this.state.lastSavedGroups === this.state.groups}
+                      disabled={JSON.stringify(this.state.lastSavedGroups) === JSON.stringify(this.groups())}
                       onClick={this.saveGroups.bind(this)}>
             <SaveIcon/>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit"
+                      disabled={!this.canUndo()}
+                      onClick={this.handleUndo.bind(this)}
+          >
             <UndoIcon/>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit"
+                      disabled={!this.canRedo()}
+                      onClick={this.handleRedo.bind(this)}
+          >
             <RedoIcon/>
           </IconButton>
 
@@ -202,7 +243,7 @@ class GroupsPage extends React.Component {
       </AppBar>
 
       <div className="gps-container">
-        {(this.state.groups.groups.map((gp, i) => (
+        {(this.groups().groups.map((gp, i) => (
             <GroupBox
                 key={JSON.stringify(gp)}
                 groupNb={i}
@@ -250,7 +291,7 @@ class GroupsPage extends React.Component {
             vertical: "bottom",
             horizontal: "left",
           }}
-          open={this.state.groups.key !== this.state.key}
+          open={this.groups().key !== this.state.key}
           message={
             <span>
                 The list of students has changed!

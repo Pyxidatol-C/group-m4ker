@@ -8,10 +8,6 @@ import PromoPage from "./promoPage";
 import NewGroupsPage from "./newGroupsPage";
 import GroupsPage from "./groupsPage";
 
-// TODO snackbar
-// TODO avatar
-// TODO dropzone
-
 const STAGE = {
   newPromo: 0,
   promo: 1,
@@ -25,10 +21,10 @@ class App extends React.Component {
 
     this.state = {
       nbGroups: 10,
-      groups: {groups: [], key: ''},
+      groups: {key: "", groups: []},
       fileName: "IB Students",
       promo: [],
-      stage: STAGE.groups,
+      stage: STAGE.newPromo,
     };
 
     this.refUploaderCSV = React.createRef();
@@ -130,7 +126,6 @@ class App extends React.Component {
     this.setState({groups});
   }
 
-// TODO group_add
   render() {
     return (
         <div className="App">
