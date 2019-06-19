@@ -1,6 +1,8 @@
 .gps-toolbar {
   position: relative;
   justify-content: space-between;
+  background: royalblue;
+  color: white;
 }
 
 .gps-title {
@@ -9,4 +11,9 @@
 
 .gps-button-desc {
   padding-right: 5%;
+}
+
+.gps-fab {
+  position: absolute;
+  display: inline-block;
 }

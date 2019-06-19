@@ -1,3 +1,5 @@
+import hash from './utils';
+
 function getStatsOf(ids, promo) {
   let nbM = 0, nbF = 0;
   let nbSL = 0, nbHL = 0;
@@ -80,7 +82,7 @@ function shuffle(a) {
 }
 
 
-function makeGroups(promo, nbGroups) {
+async function makeGroups(promo, nbGroups) {
   // Make groups
   const nbStudents = promo.length;
   const ids = [...Array(nbStudents).keys()];
@@ -122,7 +124,11 @@ function makeGroups(promo, nbGroups) {
       [groups[a][x], groups[b][y]] = [groups[b][y], groups[a][x]];
     } else {
       console.log(evaluateGroupsUsingAvg(groups, promo));
-      return groups;
+      const key = await hash(JSON.stringify(promo));
+      return {
+        key,
+        groups,
+      };
     }
   }
 }

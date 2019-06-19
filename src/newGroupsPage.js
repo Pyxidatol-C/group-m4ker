@@ -42,12 +42,13 @@ class NewGroupsPage extends React.Component {
       className = part === this.state.focus ? "gp-focus" : "gp-blur";
     }
     if (this.state.clicked === part) {
-      className += " active";
+      className = "gp-focus active";
     }
     return className;
   }
 
   handleClickLeft() {
+    if (this.state.clicked) return;
     this.setState(
         {clicked: 'left'},
         () => this.refUploaderText.current.click()
@@ -55,12 +56,13 @@ class NewGroupsPage extends React.Component {
   }
 
   handleClickRight() {
+    if (this.state.clicked) return;
     this.setState(
         {clicked: 'right'}
     );
     setTimeout(
         () => this.props.handleGenerateGroups(this.state.nbGroups),
-        500,
+        100,
     );
 
   }

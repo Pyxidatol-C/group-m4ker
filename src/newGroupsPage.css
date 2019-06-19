@@ -7,7 +7,7 @@
   height: 100%;
   width: 50%;
   display: inline-block;
-  transition: width 320ms ease-out, background 500ms, color 500ms;
+  transition: width 320ms ease-out, background 100ms, color 100ms;
 }
 
 #gp-upload {

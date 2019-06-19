@@ -25,7 +25,7 @@ class App extends React.Component {
 
     this.state = {
       nbGroups: 10,
-      groups: [],
+      groups: {groups: [], key: ''},
       fileName: "IB Students",
       promo: [],
       stage: STAGE.groups,
@@ -84,7 +84,7 @@ class App extends React.Component {
   }
 
   handlePromoClose() {
-    if (this.state.groups.length === 0) {
+    if (this.state.groups.groups.length === 0) {
       this.handleOpOpen();
     } else {
       this.handleGroupsOpen();
@@ -96,8 +96,8 @@ class App extends React.Component {
     this.handlePromoClose();
   }
 
-  handleGenerateGroups(nbGroups) {
-    const groups = makeGroups(this.state.promo, nbGroups);
+  async handleGenerateGroups(nbGroups) {
+    const groups = await makeGroups(this.state.promo, nbGroups);
     this.setState({
       groups,
       nbGroups,
@@ -161,7 +161,7 @@ class App extends React.Component {
                       promo={this.state.promo}
                       handleGroupsChange={this.handleGroupsChange}
                       handleShowPromo={this.handlePromoOpen}
-                      handleShowOp={this.handlePromoOpen}
+                      handleShowOp={this.handleOpOpen}
                       isOpen={this.state.stage === STAGE.groups}/>
         </div>
     );
