@@ -159,6 +159,7 @@ class App extends React.Component {
           <GroupsPage key={'gp' + this.state.stage}
                       groups={this.state.groups}
                       promo={this.state.promo}
+                      promoName={this.state.fileName}
                       handleGroupsChange={this.handleGroupsChange}
                       handleShowPromo={this.handlePromoOpen}
                       handleShowOp={this.handleOpOpen}

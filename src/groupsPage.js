@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Dialog, IconButton, Slide, Snackbar, Toolbar, Typography} from "@material-ui/core";
+import {Button, Dialog, IconButton, Snackbar, Toolbar, Typography} from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 import UndoIcon from "@material-ui/icons/Undo";
@@ -16,25 +16,37 @@ class GroupsPage extends React.Component {
     super(props);
     this.state = {
       groups: this.props.groups,
+      lastSavedGroups: this.props.groups,
       history: [],
       i: -1,
       isSaveWarningOpen: false,
     };
 
-    hash(this.props.promo).then(
-        (key) => this.promoKey = key
+    this.refDownload = React.createRef();
+
+    hash(JSON.stringify(this.props.promo)).then(
+        (key) => {
+          this.setState({
+            key
+          });
+        }
     );
   }
 
   clearGroups() {
     // No need to actually clear this.state.groups
-    this.props.handleGroupsChange([]);
+    this.props.handleGroupsChange({groups: [], key: ''});
     this.props.handleShowOp();
   }
 
-  saveGroups() {
+  saveGroups(shouldShowWarning=true) {
     this.props.handleGroupsChange(this.state.groups);
-    this.showSaveWarning();
+    this.setState({
+      lastSavedGroups: this.state.groups,
+    });
+    if (shouldShowWarning) {
+      this.showSaveWarning();
+    }
   }
 
   showSaveWarning() {
@@ -49,14 +61,22 @@ class GroupsPage extends React.Component {
     });
   }
 
-  render() {
-    const Transition = React.forwardRef(function Transition(props, ref) {
-      return <Slide direction="right" ref={ref} {...props} />;
-    });
+  downloadGroups() {
+    this.saveGroups(false);
+    this.refDownload.current.click();
+  }
 
+  render() {
     return <Dialog fullScreen
-                   TransitionComponent={Transition}
                    open={this.props.isOpen}>
+      <a
+          hidden
+          ref={this.refDownload}
+          href={`data: text/plain; charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.groups))}`}
+          download={`${this.props.promoName}_groups.txt`}
+      >
+        {JSON.stringify(this.state.groups)}
+      </a>
       <Toolbar className="gps-toolbar">
         <IconButton color="inherit"
                     onClick={this.clearGroups.bind(this)}>
@@ -75,7 +95,9 @@ class GroupsPage extends React.Component {
           </Button>
         </Typography>
 
-        <IconButton color="inherit" onClick={this.saveGroups.bind(this)}>
+        <IconButton color="inherit"
+                    disabled={this.state.lastSavedGroups === this.state.groups}
+                    onClick={this.saveGroups.bind(this)}>
           <SaveIcon/>
         </IconButton>
         <IconButton color="inherit">
@@ -85,14 +107,14 @@ class GroupsPage extends React.Component {
           <RedoIcon/>
         </IconButton>
 
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={this.downloadGroups.bind(this)}>
           <GetAppIcon/>
         </IconButton>
       </Toolbar>
 
       <Snackbar
           anchorOrigin={{
-            vertical: "bottom",
+            vertical: "top",
             horizontal: "right",
           }}
           open={this.state.isSaveWarningOpen}
@@ -103,36 +125,27 @@ class GroupsPage extends React.Component {
                 Use <GetAppIcon/> to download the groups.
               </span>
           }
+          action={
+            <Button color="secondary" onClick={this.hideSaveWarning.bind(this)}>
+              OK
+            </Button>}
       />
       <Snackbar
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "right",
           }}
-          open={this.state.isSaveWarningOpen}
-          onClose={this.hideSaveWarning.bind(this)}
+          open={this.state.groups.key !== this.state.key}
           message={
             <span>
-                Groups saved UNTIL this tab is closed.
-                Use <GetAppIcon/> to download the groups.
+                The list of students has changed!
               </span>
           }
-          action={<Button color="secondary">OK</Button>}
-      />
-      <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          open={this.state.isSaveWarningOpen}
-          onClose={this.hideSaveWarning.bind(this)}
-          message={
-            <span>
-                Groups saved UNTIL this tab is closed.
-                Use <GetAppIcon/> to download the groups.
-              </span>
+          action={
+            <Button color="secondary" onClick={this.clearGroups.bind(this)}>
+              Go back
+            </Button>
           }
-          action={<Button color="secondary">OK</Button>}
       />
     </Dialog>
   }
