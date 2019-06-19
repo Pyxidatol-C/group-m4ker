@@ -56,9 +56,13 @@ class NewGroupsPage extends React.Component {
 
   handleClickRight() {
     this.setState(
-        {clicked: 'right'},
-        () => this.props.handleGenerateGroups(this.state.nbGroups)
+        {clicked: 'right'}
     );
+    setTimeout(
+        () => this.props.handleGenerateGroups(this.state.nbGroups),
+        500,
+    );
+
   }
 
   canIncrementNb() {

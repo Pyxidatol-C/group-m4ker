@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  Button,
   Dialog,
   IconButton,
   Slide,
   Toolbar,
   Typography
 } from '@material-ui/core';
+import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialTable from 'material-table';
 import './promoPage.css';
@@ -63,10 +63,10 @@ class PromoPage extends React.Component {
         <Typography variant="h5" className="tbl-title">
           List of Students
         </Typography>
-        <Button color="inherit"
+        <IconButton color="inherit"
                 onClick={() => this.props.handleSave(decodeData(this.tableRef.current.state.data))}>
-          Next
-        </Button>
+          <DoneIcon/>
+        </IconButton>
       </Toolbar>
       <StudentsTable
           ref={this.tableRef}

@@ -6,6 +6,7 @@ import makeGroups from './students';
 import HomePage from "./homePage";
 import PromoPage from "./promoPage";
 import NewGroupsPage from "./newGroupsPage";
+import GroupsPage from "./groupsPage";
 
 // TODO snackbar
 // TODO avatar
@@ -24,10 +25,10 @@ class App extends React.Component {
 
     this.state = {
       nbGroups: 10,
-      groups: [], // [[54,19,57,18,28,23],[55,25,32,35,3,51],[36,11,26,31,48,46],[45,53,17,14,56,43],[58,8,10,0,13,6],[39,27,40,29,21,33],[37,49,16,38,9,12],[34,52,15,5,50,47],[24,7,20,30,22,2],[41,42,4,1,44]],
+      groups: [],
       fileName: "IB Students",
-      students: [],
-      stage: STAGE.newPromo,
+      promo: [],
+      stage: STAGE.groups,
     };
 
     this.refUploaderCSV = React.createRef();
@@ -61,10 +62,10 @@ class App extends React.Component {
       let reader = new FileReader();
       reader.onload = (evt) => {
         let content = evt.target.result;
-        let students = csv2promo(content);
-        console.log(makeGroups(students, 10));
+        let promo = csv2promo(content);
         this.setState({
-          students,
+          promo,
+          nbGroups: Math.ceil(promo.length / 6),
           fileName: file.name.split('.').slice(0, -1).join('.')
         }, this.handlePromoOpen);
       };
@@ -90,15 +91,17 @@ class App extends React.Component {
     }
   }
 
-  handlePromoSave(students) {
-    this.setState({students});
+  handlePromoSave(promo) {
+    this.setState({promo});
     this.handlePromoClose();
   }
 
-  handleGenerateGroups() {
+  handleGenerateGroups(nbGroups) {
+    const groups = makeGroups(this.state.promo, nbGroups);
     this.setState({
-      groups: makeGroups(this.state.students, this.state.nbSL)
-    }, this.handleShowGroups);
+      groups,
+      nbGroups,
+    }, this.handleGroupsOpen);
   }
 
   handleUploadGroups(e) {
@@ -142,15 +145,24 @@ class App extends React.Component {
                     isOpen={this.state.stage === STAGE.newPromo}
                     onClick={this.handleChooseCSV}/>
           <PromoPage key={'promo' + this.state.stage}
-                     students={this.state.students}
+                     students={this.state.promo}
                      fileName={this.state.fileName}
                      isOpen={this.state.stage === STAGE.promo}
                      handleClose={this.handleHomeOpen}
                      handleSave={this.handlePromoSave}/>
           <NewGroupsPage key={'op' + this.state.stage}
-                         handleGenerateGroups={this.handleGenerateGroups}
+                         nbGroups={this.state.nbGroups}
+                         maxNbGroups={this.state.promo.length}
                          handleUploadGroups={this.handleUploadGroups}
+                         handleGenerateGroups={this.handleGenerateGroups}
                          isOpen={this.state.stage === STAGE.newGroups}/>
+          <GroupsPage key={'gp' + this.state.stage}
+                      groups={this.state.groups}
+                      promo={this.state.promo}
+                      handleGroupsChange={this.handleGroupsChange}
+                      handleShowPromo={this.handlePromoOpen}
+                      handleShowOp={this.handlePromoOpen}
+                      isOpen={this.state.stage === STAGE.groups}/>
         </div>
     );
   }

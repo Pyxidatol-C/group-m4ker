@@ -1,0 +1,12 @@
+.gps-toolbar {
+  position: relative;
+  justify-content: space-between;
+}
+
+.gps-title {
+  flex: 1;
+}
+
+.gps-button-desc {
+  padding-right: 5%;
+}
