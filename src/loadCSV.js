@@ -1,17 +1,17 @@
-function csv2promo(csv) {
+const csv = require('csvtojson');
+
+async function csv2promo(c) {
+  const rows = await csv({
+    output: "json",
+  }).fromString(c);
+
   let promo = [];
   let iName, iGender, iLeader, iBio, iChm, iPhy;
-  let rows = csv.split("\n");
-  let headers = rows[0].split(",");
+  let headers = Object.keys(rows[0]);
 
-  const genders = new Set(),
-      leaderLvls = new Set(),
-      bioLvls = new Set(),
-      chmLvls = new Set(),
-      phyLvls = new Set();
-
-  for (const [i, header_] of headers.entries()) {
-    const header = header_.replace(/ /g, "").toUpperCase();
+  for (const i of headers) {
+    const header = i.replace(/ /g, "").toUpperCase();
+    console.log(header);
     if (header.includes("NAME") || header.includes("STUDENT")) {
       iName = iName || i;
     } else if (header.includes("GENDER") || header.includes("M/F")) {
@@ -27,8 +27,9 @@ function csv2promo(csv) {
     }
   }
 
-  for (const row of rows.slice(1)) {
-    const info = row.split(",");
+  for (const info of rows) {
+    console.log(info[iLeader]);
+
     promo.push({
       name: info[iName],
       gender: info[iGender],
@@ -37,28 +38,6 @@ function csv2promo(csv) {
       chm: info[iChm],
       phy: info[iPhy],
     });
-
-    genders.add(info[iGender]);
-    leaderLvls.add(info[iLeader]);
-    bioLvls.add(info[iBio]);
-    chmLvls.add(info[iChm]);
-    phyLvls.add(info[iPhy]);
-  }
-
-  if (genders.size !== 2) {
-    console.log(`Did not expect genders: ${Array.from(genders)}`);
-  }
-  if (leaderLvls.size !== 2) {
-    console.log(`Did not expect leadership values: ${Array.from(leaderLvls)}`);
-  }
-  if (bioLvls.size !== 3) {
-    console.log(`Did not expect biology level values: ${Array.from(bioLvls)}`);
-  }
-  if (chmLvls.size !== 3) {
-    console.log(`Did not expect chemistry level values: ${Array.from(chmLvls)}`);
-  }
-  if (phyLvls.size !== 3) {
-    console.log(`Did not expect physics level values: ${Array.from(phyLvls)}`);
   }
 
   return promo;

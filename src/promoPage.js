@@ -16,7 +16,7 @@ function encodeData(data) {
     return {
       ...s,
       gender: s.gender === "M" ? 0 : s.gender === "F" ? 1 : 2,
-      leader: s.leader === undefined || s.leader ? 0 : 1,
+      leader: s.leader === undefined || !s.leader ? 0 : 1,
       bio: s.bio === "HL" ? 2 : s.bio === "SL" ? 1 : 0,
       chm: s.chm === "HL" ? 2 : s.chm === "SL" ? 1 : 0,
       phy: s.phy === "HL" ? 2 : s.phy === "SL" ? 1 : 0,
@@ -87,9 +87,9 @@ class StudentsTable extends React.Component {
         {title: "Name", field: "name"},
         {title: "Gender", field: "gender", lookup: genderLookup},
         {title: "Leadership", field: "leader", lookup: leadershipLookup},
-        {title: "Biology level", field: "bio", lookup: sciLookup},
-        {title: "Chemistry level", field: "chm", lookup: sciLookup},
-        {title: "Physics level", field: "phy", lookup: sciLookup},
+        {title: "BIO level", field: "bio", lookup: sciLookup},
+        {title: "CHM level", field: "chm", lookup: sciLookup},
+        {title: "PHY level", field: "phy", lookup: sciLookup},
       ],
       data: encodeData(props.students),
     };
@@ -103,6 +103,7 @@ class StudentsTable extends React.Component {
         options={{
           addRowPosition: "first",
           exportButton: true,
+          exportAllData: true,
           filtering: true,
           pageSize: 10,
         }}

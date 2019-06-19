@@ -60,9 +60,9 @@ class App extends React.Component {
     try {
       let file = e.target.files[0];
       let reader = new FileReader();
-      reader.onload = (evt) => {
+      reader.onload = async (evt) => {
         let content = evt.target.result;
-        let promo = csv2promo(content);
+        let promo = await csv2promo(content);
         this.setState({
           promo,
           nbGroups: Math.ceil(promo.length / 6),
@@ -109,12 +109,13 @@ class App extends React.Component {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onload = (evt) => {
-        let content = evt.target.result;
+        const groups= decodeURIComponent(evt.target.result);
 
         this.setState({
-          groups: [],
+          groups,
         }, this.handleGroupsOpen);
       };
+
       reader.readAsText(file);
     } catch (e) {
       console.log(e);
