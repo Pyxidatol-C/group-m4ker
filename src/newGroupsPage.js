@@ -1,6 +1,6 @@
 import React from 'react';
 import './newGroupsPage.css';
-import {Dialog, Fab} from "@material-ui/core";
+import {Button, Dialog, Fab, Snackbar} from "@material-ui/core";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import OpenInBroswerIcon from "@material-ui/icons/OpenInBrowser";
 import AddIcon from "@material-ui/icons/Add";
@@ -128,6 +128,18 @@ class NewGroupsPage extends React.Component {
           </div>
         </OptionPanel>
       </div>
+      <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          open={this.state.clicked === "right"}
+          message={
+            <span>
+                Processing ...
+              </span>
+          }
+      />
     </Dialog>
   }
 }
