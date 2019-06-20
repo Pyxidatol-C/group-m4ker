@@ -1,68 +1,144 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+    <img src="examples/app_logo.png"/>
+</div>
 
-## Available Scripts
+# Group M4ker
+A webapp that generates fair groups for field trips (IB Group 4 Project).
 
-In the project directory, you can run:
+## Getting started
+### Use online
+https://pyxidatol-c.github.io/group-m4ker/
 
-### `npm start`
+### Use offline
+(instructions for MacOS)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Download the latest build from https://github.com/Pyxidatol-C/group-m4ker/releases
+2. Unzip the downloaded file to an easily findable location. We will use `~/Desktop`.
+3. Open up terminal. Type in the following lines:
+```shell
+cd Desktop/build/  # you can tab for auto-complete
+python -m SimpleHTTPServer  # or `python3 -m http.server`
+```
+4. Open http://0.0.0.0:8000/ in your browser - done!
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Usage
+### 1. Students
+Firstly, you need to have a spreadsheet of the students' information, like:
 
-### `npm test`
+| Student        | Gender | Leadership | Bio | Chm | Phy |
+| -------------- | ------ | ---------- | --- | --- | --- |
+| Jingjie Yang   | M      |            |     | HL  | HL  |
+| Lilia Evgeniou | F      | Yes        | HL  | HL  |     |
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+If you just want to try the app out, a mock data file is available: [`examples/data_oui.csv`](examples/data_oui.csv)
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Refer to [here](#Columns) for specifications on the header name and cell values of the columns.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### 2. Upload students.csv
+<img src="examples/upload.gif"/>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 3. Edit the list of students
+<img src="examples/edit.gif"/>
 
-### `npm run eject`
+* You can upload a different list of students by clicking on the cross at the top-left corner.
+* You can edit, delete, or add a row using the corresponding buttons.
+* It is possible to filter by a value or search for a name using the corresponding fields.
+* Once you have finished editing, remember to save the csv using **Export as CSV** near the top-right corner if you wish to keep the changes after closing the tab.
+* Click on the tick at the top-right corner to proceed.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 4. Generate / Upload groups
+<img src="examples/generate.gif"/>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* Use the **+** and **-** buttons to adjust the number of groups you wish to generate.
+* Click on the black icon to generate the groups. This process can be slow, but usually takes up to 5 seconds.
+* Alternatively, you can upload a saved groups file by clicking on the white icon - more on this later.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 5. Tweaking groups
+<img src="examples/swap.gif"/>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* You may now view the generated groups.
+* After selecting a student, all other students of the same profile (same gender, subjects, leadership) will be highlighted.
+* Once two students of the same profile are selected, you can use the red "Swap!" button located at the bottom-right corner to swap them. In this way, it is usually possible to separate students who do not get along together without compromising the fairness of the groups.
+* You can undo, redo, and save the swaps made - but don't forget to download the groups file by clicking on the button at the top-right corner.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 6. Oh snap!
+<img src="examples/hash_diff.png" width="1024"/>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* This happens when the list of students used to generate the groups does not match the loaded list. The consequences include missing or mismatched information and possibly an unfair distribution of students. 
+* You can re-upload/generate the groups using the loaded list of students by clicking the "OK" button;
+* alternatively, you can view/edit the loaded list of students and maybe upload a different list using the "VIEW STUDENTS" button.
 
-### Code Splitting
+Other unidentified issues may occur. Please
+* take a screenshot (with the console if possible) and open an issue on https://github.com/Pyxidatol-C/group-m4ker/issues
+* reload the page and continue using the app, hoping that you can't reproduce the bug
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Specifications
+### Columns
+Below we detail the requirements for the **headers** and *cells* for each column.
 
-### Analyzing the Bundle Size
+Note that the **headers** are case and space insensitive - `" "`s are ignored and `"A"` is considered the same as `"a"`.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+#### Name
+* the **header** must include `Name` or `Student`
+    * e.g. `Student`, `Name`, or `Student Name`
+* the *cells* can be anything
 
-### Making a Progressive Web App
+#### Gender
+* the **header** must include `Gender` or `M/F`
+* the *cells* can be either `M` for male, `F` for female, or other values (default if the column is not found).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+#### Leadership
+* the **header** must include `Leader`
+    * e.g. `Leadership`
+* the *cells* can be either:
+    * non-empty, e.g. `Yes` - the student is considered as a strong leader
+    * empty - otherwise (default)
 
-### Advanced Configuration
+#### Biology
+* the **header** must include `BIO`
+    * e.g. `BIO level`
+    * If 2 column headers both include `BIO`, the column on the left will be chosen:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+         | ... | BIO Level | BIO Group | ... |
+         | --- | --------- | --------- | --- |
+         | ... | SL        | G4        | ... |
 
-### Deployment
+         Here `BIO Level` and not `BIO Group` will be identified as the column for the students' biology levels.
+* the *cells* have to be one of:
+    * `SL` - standard level
+    * `HL` - higher level
+    * anything else - not taking this subject (default)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
-### `npm run build` fails to minify
+#### Chemistry
+* the **header** must include `CHM`
+    * e.g. `CHM level`
+* the *cells* have to be one of:
+    * `SL` - standard level
+    * `HL` - higher level
+    * anything else - not taking this subject (default)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+#### Physics
+* the **header** must include `PHY`
+    * e.g. `PHY level`
+* the *cells* have to be one of:
+    * `SL` - standard level
+    * `HL` - higher level
+    * anything else - not taking this subject (default)
+
+### Export as csv
+Finally, please export your spreadsheet in `csv` format so that the app will work properly.
+
+## Techncial details
+* This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+* The nice-looking tables and buttons n all are from [Material-UI](https://material-ui.com) and [material-table](https://material-table.com).
+* The webapp is deployed on github pages using [gh-pages](https://www.npmjs.com/package/gh-pages)
+
+## Other details
+* This project has no testing whatsoever.
+* The code is written in roughly 3 days by someone who has not done any front-end development since a year ago.
+* The group generation algorithm is copied from https://github.com/ejm-programming-club/Group-M4ker, a no longer maintained iOS version of this app.
+  * The algorithm finds and executes the swap that decreases the differences between groups by the greatest amount, until any swap would make the groups worse.
+  * I do not actually know if steepest descent is more effective than random descent, or if the returned grouping is a local or global optimum - todos for ~~never~~ later.
