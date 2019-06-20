@@ -30,14 +30,16 @@ const sciLookup = {0: " ", 1: "SL", 2: "HL"};
 
 function decodeData(data) {
   return data.map(s => {
-    return {
+    let s2 = {
       ...s,
       gender: genderLookup[s.gender],
       leader: leadershipLookup[s.leader],
       bio: sciLookup[s.bio],
       chm: sciLookup[s.chm],
       phy: sciLookup[s.phy],
-    }
+    };
+    delete s2.tableData;
+    return s2;
   });
 }
 

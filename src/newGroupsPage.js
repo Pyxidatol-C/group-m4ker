@@ -1,6 +1,6 @@
 import React from 'react';
 import './newGroupsPage.css';
-import {Button, Dialog, Fab, Snackbar} from "@material-ui/core";
+import {Dialog, Fab, Snackbar} from "@material-ui/core";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import OpenInBroswerIcon from "@material-ui/icons/OpenInBrowser";
 import AddIcon from "@material-ui/icons/Add";
