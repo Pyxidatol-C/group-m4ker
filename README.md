@@ -12,7 +12,7 @@ https://pyxidatol-c.github.io/group-m4ker/
 ### Use offline
 (instructions for MacOS)
 
-1. Download the latest build from https://github.com/Pyxidatol-C/group-m4ker/releases
+1. Download the latest build from https://github.com/Pyxidatol-C/group-m4ker/releases/latest
 2. Unzip the downloaded file to an easily findable location. We will use `~/Desktop`.
 3. Open up terminal. Type in the following lines:
 ```shell
