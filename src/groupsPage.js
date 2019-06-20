@@ -336,7 +336,7 @@ class GroupsPage extends React.Component {
               View students
             </Button>
             <Button onClick={this.clearGroups.bind(this)} color="secondary">
-              Go back
+              Ok
             </Button>
           </DialogActions>
         </DialogContent>
