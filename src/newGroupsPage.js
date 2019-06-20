@@ -25,6 +25,7 @@ class NewGroupsPage extends React.Component {
   handleMouseEnter(focus) {
     this.setState({
       focus,
+      clicked: this.state.clicked === 'left' && this.refUploaderText.current.value === "" ? '' : this.state.clicked,
     });
   }
 
