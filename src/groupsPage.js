@@ -3,7 +3,7 @@ import {
   AppBar,
   Button,
   Card,
-  Dialog,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   Divider,
   Fab,
   IconButton,
@@ -188,6 +188,30 @@ class GroupsPage extends React.Component {
     })
   }
 
+  hasPromoChanged() {
+    return this.groups().key !== this.state.key;
+  }
+
+  renderGroups() {
+    if (this.hasPromoChanged()) return [];
+    return (
+        <div className="gps-container">
+          {(this.groups().groups.map((gp, i) => (
+              <GroupBox
+                  key={JSON.stringify(gp)}
+                  groupNb={i}
+                  groupIds={gp}
+                  promo={this.props.promo}
+                  selected1={this.state.selected1}
+                  selected2={this.state.selected2}
+                  highlighted={this.state.highlighted}
+                  handleClick={this.handleStudentClick.bind(this)}
+              />
+          )))}
+        </div>
+    );
+  }
+
   render() {
     return <Dialog fullScreen
                    open={this.props.isOpen}>
@@ -241,20 +265,8 @@ class GroupsPage extends React.Component {
         </Toolbar>
       </AppBar>
 
-      <div className="gps-container">
-        {(this.groups().groups.map((gp, i) => (
-            <GroupBox
-                key={JSON.stringify(gp)}
-                groupNb={i}
-                groupIds={gp}
-                promo={this.props.promo}
-                selected1={this.state.selected1}
-                selected2={this.state.selected2}
-                highlighted={this.state.highlighted}
-                handleClick={this.handleStudentClick.bind(this)}
-            />
-        )))}
-      </div>
+      {this.renderGroups()}
+
       <div className="gps-fab-container">
         <Fab
             variant="extended"
@@ -285,23 +297,29 @@ class GroupsPage extends React.Component {
               OK
             </Button>}
       />
-      <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          open={this.groups().key !== this.state.key}
-          message={
-            <span>
-                The list of students has changed!
-              </span>
-          }
-          action={
-            <Button color="secondary" onClick={this.clearGroups.bind(this)}>
+
+      <Dialog open={this.hasPromoChanged()}>
+        <DialogContent>
+          <DialogTitle>
+            The list of students has changed!
+          </DialogTitle>
+          <DialogContentText>
+            The loaded groups were generated using a different list.
+            This means that the groups may be unfairly distributed.
+            <br/>
+            You can either upload another saved file, or generate new groups.
+          </DialogContentText>
+          <DialogActions>
+            <Button onClick={this.props.handleShowPromo} color="default">
+              View students
+            </Button>
+            <Button onClick={this.clearGroups.bind(this)} color="secondary">
               Go back
             </Button>
-          }
-      />
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+
     </Dialog>
   }
 }
