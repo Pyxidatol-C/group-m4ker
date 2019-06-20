@@ -91,7 +91,7 @@ class NewGroupsPage extends React.Component {
              id="file"
              ref={this.refUploaderText}
              accept="text/plain"
-             onChange={this.props.handleUploadGroups}
+             onChange={(e) => this.props.handleUploadGroups(e, () => this.setState({clicked: ''}))}
              hidden/>
       <div id="gp-container">
         <OptionPanel id_="gp-upload"

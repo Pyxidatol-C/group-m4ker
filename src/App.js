@@ -57,13 +57,17 @@ class App extends React.Component {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onload = async (evt) => {
-        let content = evt.target.result;
-        let promo = await csv2promo(content);
-        this.setState({
-          promo,
-          nbGroups: Math.ceil(promo.length / 6),
-          fileName: file.name.split('.').slice(0, -1).join('.')
-        }, this.handlePromoOpen);
+        try {
+          let content = evt.target.result;
+          let promo = await csv2promo(content);
+          this.setState({
+            promo,
+            nbGroups: Math.ceil(promo.length / 6),
+            fileName: file.name.split('.').slice(0, -1).join('.')
+          }, this.handlePromoOpen);
+        } catch (e) {
+          console.log(e);
+        }
       };
       reader.readAsText(file);
     } catch (e) {
@@ -100,21 +104,26 @@ class App extends React.Component {
     }, this.handleGroupsOpen);
   }
 
-  handleUploadGroups(e) {
+  handleUploadGroups(e, handleFail) {
     try {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onload = (evt) => {
-        const groups= JSON.parse(decodeURIComponent(evt.target.result));
+        try {
+          const groups = JSON.parse(decodeURIComponent(evt.target.result));
 
-        this.setState({
-          groups,
-        }, this.handleGroupsOpen);
+          this.setState({
+            groups,
+          }, this.handleGroupsOpen);
+        } catch (e) {
+          handleFail();
+        }
       };
 
       reader.readAsText(file);
     } catch (e) {
       console.log(e);
+      handleFail();
     }
   }
 
