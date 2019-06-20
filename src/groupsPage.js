@@ -208,9 +208,8 @@ class GroupsPage extends React.Component {
 
           <Typography variant="h5" className="gps-title">
             Groups of
-            <Button color="inherit">
+            <Button color="inherit" onClick={this.props.handleShowPromo}>
               <Typography variant="h5"
-                          onClick={this.props.handleShowPromo}
                           className="gps-button-desc">
                 Students
               </Typography>
