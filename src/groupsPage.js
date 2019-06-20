@@ -40,6 +40,17 @@ function hasSameProfile(s1, s2) {
       && s1.phy === s2.phy;
 }
 
+function diffGroups(gps1, gps2) {
+  for (let i = 0; i < gps1.length; i++) {
+    for (let j = 0; j < gps1[i].length; j++) {
+      if (gps1[i][j] !== gps2[i][j]) {
+        return [gps1[i][j], gps2[i][j]];
+      }
+    }
+  }
+  return [];
+}
+
 
 class GroupsPage extends React.Component {
   constructor(props) {
@@ -50,6 +61,7 @@ class GroupsPage extends React.Component {
       i: 0,
       selected1: null,
       selected2: null,
+      swapped: [],
       highlighted: [],
       isSaveWarningOpen: false,
     };
@@ -162,13 +174,21 @@ class GroupsPage extends React.Component {
 
   handleUndo() {
     this.setState({
-      i: this.state.i - 1
+      i: this.state.i - 1,
+      selected1: null,
+      selected2: null,
+      highlighted: [],
+      swapped: diffGroups(this.state.history[this.state.i].groups, this.state.history[this.state.i - 1].groups),
     });
   }
 
   handleRedo() {
     this.setState({
-      i: this.state.i + 1
+      i: this.state.i + 1,
+      selected1: null,
+      selected2: null,
+      highlighted: [],
+      swapped: diffGroups(this.state.history[this.state.i].groups, this.state.history[this.state.i + 1].groups),
     });
   }
 
@@ -185,6 +205,7 @@ class GroupsPage extends React.Component {
       selected1: null,
       selected2: null,
       highlighted: [],
+      swapped: [groups[a.i][a.j], groups[b.i][b.j]],
     })
   }
 
@@ -202,6 +223,7 @@ class GroupsPage extends React.Component {
                   groupNb={i}
                   groupIds={gp}
                   promo={this.props.promo}
+                  swapped={this.state.swapped}
                   selected1={this.state.selected1}
                   selected2={this.state.selected2}
                   highlighted={this.state.highlighted}
@@ -335,6 +357,10 @@ class GroupBox extends React.Component {
     return this.props.highlighted.includes(id);
   }
 
+  isSwapped(id) {
+    return this.props.swapped.includes(id);
+  }
+
   getPersonBox(id, j) {
     const name = this.props.promo[id].name;
     return (
@@ -346,7 +372,7 @@ class GroupBox extends React.Component {
             divider={j !== this.props.groupIds.length - 1}
             onClick={() => this.props.handleClick(this.props.groupNb, j)}
         >
-          <ListItemText primary={name}/>
+          <ListItemText primary={name} className={this.isSwapped(id) ? "gps-swapped" : ""}/>
         </ListItem>
     );
   }
