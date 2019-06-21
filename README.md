@@ -51,7 +51,7 @@ Refer to [here](#Columns) for specifications on the header name and cell values 
 <img src="examples/generate.gif"/>
 
 * Use the **+** and **-** buttons to adjust the number of groups you wish to generate.
-* Click on the black icon to generate the groups. This process can be slow, but usually takes up to 5 seconds.
+* Click on the black icon to generate the groups. This process can be slow.
 * Alternatively, you can upload a saved groups file by clicking on the white icon - more on this later.
 
 ### 5. Tweaking groups
@@ -135,6 +135,7 @@ Finally, please export your spreadsheet in `csv` format so that the app will wor
 * This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 * The nice-looking tables and buttons n all are from [Material-UI](https://material-ui.com) and [material-table](https://material-table.com).
 * The webapp is deployed on github pages using [gh-pages](https://www.npmjs.com/package/gh-pages)
+* To publish the zip for offline usages, remove the `homepage` entry in [package.json](./package.json)
 
 ## Other details
 * This project has no testing whatsoever.

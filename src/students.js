@@ -50,7 +50,7 @@ function evaluateGroupsUsingAvg(groups, promo) {
   return -score;
 }
 
-function evaluateGroupsUsingDiff(groups, promo) {
+/*function evaluateGroupsUsingDiff(groups, promo) {
   let score = 0;
 
   for (let i = 0; i < groups.length; i++) {
@@ -70,7 +70,7 @@ function evaluateGroupsUsingDiff(groups, promo) {
   }
 
   return -score;
-}
+}*/
 
 // Fisher-Yates algorithm
 // copied from https://stackoverflow.com/a/6274381/6597726
@@ -98,7 +98,7 @@ async function makeGroups(promo, nbGroups) {
   }
 
   // Test swaps
-  let score = evaluateGroupsUsingDiff(groups, promo);
+  let score = evaluateGroupsUsingAvg(groups, promo);
   let swap = {a: 0, b: 0, x: 0, y: 0};
   let scores = [score];
 
@@ -108,7 +108,7 @@ async function makeGroups(promo, nbGroups) {
         for (let x = 0; x < groups[a].length; x++) {
           for (let y = 0; y < groups[b].length; y++) {
             [groups[a][x], groups[b][y]] = [groups[b][y], groups[a][x]];  // no bj hehehe
-            let score0 = evaluateGroupsUsingDiff(groups, promo);
+            let score0 = evaluateGroupsUsingAvg(groups, promo);
             if (score0 > score) {
               score = score0;
               swap = {a, b, x, y};
@@ -128,7 +128,7 @@ async function makeGroups(promo, nbGroups) {
       const tElapsed = (tEnd - tStart) / 1000;
 
       console.log("Time elapsed: ", tElapsed);
-      console.log("Aggregate number of differences: ", -evaluateGroupsUsingAvg(groups, promo));
+      console.log("Aggregate offset: ", -evaluateGroupsUsingAvg(groups, promo));
       console.log(scores);
       const key = await hash(JSON.stringify(promo));
       return {
