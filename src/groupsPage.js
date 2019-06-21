@@ -91,6 +91,7 @@ class GroupsPage extends React.Component {
     this.props.handleGroupsChange(this.groups());
     this.setState({
       lastSavedGroups: this.groups(),
+      swapped: [],
     });
     if (shouldShowWarning) {
       this.showSaveWarning();
