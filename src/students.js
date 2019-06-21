@@ -83,6 +83,8 @@ function shuffle(a) {
 
 
 async function makeGroups(promo, nbGroups) {
+  const tStart = Date.now();
+
   // Make groups
   const nbStudents = promo.length;
   const ids = [...Array(nbStudents).keys()];
@@ -118,12 +120,16 @@ async function makeGroups(promo, nbGroups) {
     }
 
     if (score > scores[scores.length - 1]) {
-      console.log(score);
       scores.push(score);
       const {a, b, x, y} = swap;
       [groups[a][x], groups[b][y]] = [groups[b][y], groups[a][x]];
     } else {
-      console.log(evaluateGroupsUsingAvg(groups, promo));
+      const tEnd = Date.now();
+      const tElapsed = (tEnd - tStart) / 1000;
+
+      console.log("Time elapsed: ", tElapsed);
+      console.log("Aggregate number of differences: ", -evaluateGroupsUsingAvg(groups, promo));
+      console.log(scores);
       const key = await hash(JSON.stringify(promo));
       return {
         key,
