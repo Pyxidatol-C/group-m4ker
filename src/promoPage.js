@@ -26,7 +26,7 @@ function encodeData(data) {
 
 const genderLookup = {0: "M", 1: "F", 2: "Other"};
 const leadershipLookup = {0: "", 1: "Yes"};
-const sciLookup = {0: " ", 1: "SL", 2: "HL"};
+const sciLookup = {0: "", 1: "SL", 2: "HL"};
 
 function decodeData(data) {
   return data.map(s => {
